@@ -62,7 +62,7 @@ void BMP::read(const char* path) {
 
 	file.read((char*) &info, sizeof(BITMAPINFO));
 
-    if (info.biSize != 40 || info.biCompression != 0 || info.biPlanes != 1) 
+	if (info.biSize != 40 || info.biCompression != 0 || info.biPlanes != 1) 
 		return;
 
 	if (info.biBitCount <= 8) {
