@@ -1,6 +1,5 @@
 #include "bmp.hpp"
-#include <cstdio>
-#include <cmath>
+#include "math.h"
 
 int main() {
 	BMP image;
