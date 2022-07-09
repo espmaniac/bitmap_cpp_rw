@@ -89,7 +89,7 @@ void BMP::read(const char* path) {
 			//scanLine.push_back(file.get());
 		data.insert(data.begin(), scanLine);
 		*/
-		file.read((char*) &data[abs(flip - row)][0], bytesWidth);
+		file.read((char*) &data[(int32_t)abs(flip - row)][0], bytesWidth);
 
 		file.seekg(padding, std::ios::cur);
 	}
@@ -111,10 +111,10 @@ void BMP::write(const char* path) {
 		file.write((char*) &colors[0], colors.size() * sizeof(RGBQUAD));
 
 	for (int32_t row = 0; row < absHeight; ++row) {
-		file.write((char*) &data[abs(flip - row)][0], bytesWidth);
+		file.write((char*) &data[(int32_t)abs(flip - row)][0], bytesWidth);
 		/*
 		for (uint16_t col = 0; col < bytesWidth; ++col)
-			file.put(data[abs(flip - row)][col]);
+			file.put(data[(int32_t)abs(flip - row)][col]);
 		*/
 		for (uint8_t i = 0; i < padding; ++i)
 			file.put(0x00);
