@@ -51,6 +51,10 @@ public:
 
 	void write(const char*);
 
+	void setPixel(int32_t, int32_t, uint8_t);
+
+	uint8_t readPixel(int32_t, int32_t) const;
+
 	const BITMAPFILEHEADER &getHeader() const;
 
 	const BITMAPINFO &getInfo() const;

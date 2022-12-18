@@ -4,28 +4,21 @@
 int main() {
 	BMP image;
 
-	image.width = 32;
-	image.height = 32;
-	image.bitCount = 24;
-	image.initBmp();
-
-	for (int32_t i= 0; i < image.getAbsHeight(); ++i) {
-		for (uint32_t j = 0; j < image.getBytesWidth(); ++j)
-			image.getData()[(int32_t)abs(image.getFlip() - i)][j] = i * j * 155;
-	}
-	
-	image.write("images/24bpp.bmp");
-
-	image.width = 32;
-	image.height = 32;
+	image.width = 33;
+	image.height = 33;
 	image.bitCount = 1;
 	image.initBmp();
 	image.getColors()[0] = {0,0,0,0};
 	image.getColors()[1] = {255,255,255,0};
-	for (int32_t i= 0; i < image.getAbsHeight(); ++i) {
-		for (uint32_t j = 0; j < image.getBytesWidth(); ++j)
-			image.getData()[(int32_t)abs(image.getFlip() - i)][j] = 0b11110000;
+
+	for (int32_t y = 0; y < image.getAbsHeight(); ++y) {
+		for (int32_t x = 0; x < image.width; ++x)
+			if ((y % 2) && (x % 2))
+				image.setPixel(x, y, 1);
 	}
-	image.write("images/1bpp.bmp");
+
+	printf("\nreadPixel %d\n", image.readPixel(0,0));
+
+	image.write("images/grid.bmp");
 	return 0;
 }

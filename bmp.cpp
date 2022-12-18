@@ -123,6 +123,81 @@ void BMP::write(const char* path) {
 	file.close();
 }
 
+
+void BMP::setPixel(int32_t x, int32_t y, uint8_t value) {	
+	switch (bitCount) {
+		case 1:
+			// 8 pixels per byte
+			/*
+			The pixel values are stored in each bit, 
+			with the first (left-most) pixel in the most-significant bit of the first byte
+			*/
+			if (value & 1) {
+				data[y][x >> 3] |= 1 << (7 - (x & 7));
+				//data[y][x >> 3] |= 1 << (~x & 7); // (1 * (~x & 7))
+			}
+			else {
+				data[y][x >> 3] &= ~(1 << (7 - (x & 7)));
+				//data[y][x >> 3] &= ~(1 << (~x & 7)); // (1 * (~x & 7))
+			}
+			return;
+
+		case 2:
+			// 4 pixels per 1 byte, the left-most pixel being in the two most significant bits
+			for (uint8_t i = 0; i < bitCount; ++i) {
+				if (value & (1 << i)) {
+					data[y][x >> 2] |= (1 << i) << (6 - (2 * (x & 3)));
+					//data[y][x >> 2] |= (1 << i) << (2 * (~x & 3));
+				}
+				else {
+					data[y][x >> 2] &= ~((1 << i) << (6 - (2 * (x & 3))));
+					//data[y][x >> 2] &= ~((1 << i) << (2 * (~x & 3)));
+				}
+			}
+			return;
+
+		case 4:
+			// 2 pixels per 1 byte, the left-most pixel being in the more significant nibble
+			for (uint8_t i = 0; i < bitCount; ++i) {
+				if (value & (1 << i)) {
+					data[y][x >> 1] |= (1 << i) << (4 - (4 * (x & 1)));
+					//data[y][x >> 1] |= (1 << i) << (4 * (~x & 1));
+				}
+				else {
+					data[y][x >> 1] &= ~((1 << i) << (4 - (4 * (x & 1))));
+					//data[y][x >> 1] &= ~((1 << i) << (4 * (~x & 1)));
+				}
+			}
+			return;
+
+		case 8:
+			// 1 pixel per 1 byte
+			data[y][x] = value;
+			return;
+
+		default: return;
+	}
+
+}
+
+uint8_t BMP::readPixel(int32_t x, int32_t y) const {
+	switch (bitCount) {
+		case 1:
+			return (data[y][x >> 3] >> (7 - (x & 7))) & 1;
+
+		case 2:
+			return (data[y][x >> 2] >> (6 - (2 * (x & 3)))) & 0b11;
+
+		case 4:
+			return (data[y][x >> 1] >> (4 - (4 * (x & 1)))) & 0b1111;
+
+		case 8:
+			return data[y][x];
+
+		default: return 0;
+	}
+}
+
 const BITMAPFILEHEADER &BMP::getHeader() const {
 	return header;
 }
