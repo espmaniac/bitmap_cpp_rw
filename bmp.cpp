@@ -133,11 +133,13 @@ void BMP::setPixel(int32_t x, int32_t y, uint8_t value) {
 			with the first (left-most) pixel in the most-significant bit of the first byte
 			*/
 			if (value & 1) {
-				data[y][x >> 3] |= 1 << (7 - (x & 7));
+				data[y][x >> 3] |= 0x80 >> (x & 7);
+				//data[y][x >> 3] |= 1 << (7 - (x & 7));
 				//data[y][x >> 3] |= 1 << (~x & 7); // (1 * (~x & 7))
 			}
 			else {
-				data[y][x >> 3] &= ~(1 << (7 - (x & 7)));
+				data[y][x >> 3] &= ~(0x80 >> (x & 7));
+				//data[y][x >> 3] &= ~(1 << (7 - (x & 7)));
 				//data[y][x >> 3] &= ~(1 << (~x & 7)); // (1 * (~x & 7))
 			}
 			return;
